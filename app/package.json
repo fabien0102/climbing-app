@@ -1,9 +1,9 @@
 {
   "name": "climbing-app",
-  "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
-  "license": "",
+  "version": "0.0.1",
+  "description": "Follow your climbing progress easily",
+  "author": "fabien0102 <fabien0102@gmail.com>",
+  "license": "MIT",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "test": "node ./node_modules/jest/bin/jest.js --watch"
@@ -12,13 +12,21 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/samples": "^2.0.2",
+    "apollo-client": "^1.9.3",
     "expo": "^21.0.0",
-    "react": "16.0.0-alpha.12",
+    "graphql-tag": "^2.4.2",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.4",
+    "native-base": "^2.3.2",
+    "qs": "^6.5.1",
+    "react": "^16.0.0-alpha.12",
+    "react-apollo": "^1.4.16",
     "react-native": "https://github.com/expo/react-native/archive/sdk-21.0.2.tar.gz",
     "react-navigation": "^1.0.0-beta.12"
   },
   "devDependencies": {
-    "jest-expo": "^21.0.0"
+    "enzyme": "^3.1.0",
+    "jest-expo": "^21.0.0",
+    "react-dom": "^16.0.0"
   }
 }
