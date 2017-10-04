@@ -1,0 +1,18 @@
+subscription {
+  Try(filter: {
+    mutation_in: [CREATED, UPDATED, DELETED]
+  }) {
+    node {
+      route {
+        id
+        tries {
+          createdAt
+          user {
+            id
+          }
+          successLevel
+        }
+      }
+    }
+  }
+}
