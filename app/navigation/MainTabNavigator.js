@@ -1,25 +1,21 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
+import React from "react";
+import { Platform } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { TabNavigator, TabBarBottom } from "react-navigation";
 
-import Colors from '../constants/Colors';
+import Colors from "../constants/Colors";
 
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import HomeScreen from "../screens/HomeScreen";
+import RoutesNavigator from "./RoutesNavigator";
 
 export default TabNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeScreen
     },
-    Links: {
-      screen: LinksScreen,
-    },
-    Settings: {
-      screen: SettingsScreen,
-    },
+    Routes: {
+      screen: RoutesNavigator
+    }
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -27,20 +23,16 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         switch (routeName) {
-          case 'Home':
-            iconName = Platform.OS === 'ios'
-              ? `ios-information-circle${focused ? '' : '-outline'}`
-              : 'md-information-circle';
+          case "Home":
+            iconName = Platform.OS === "ios"
+              ? `ios-home-circle${focused ? "" : "-outline"}`
+              : "md-home-circle";
             break;
-          case 'Links':
-            iconName = Platform.OS === 'ios'
-              ? `ios-link${focused ? '' : '-outline'}`
-              : 'md-link';
+          case "Routes":
+            iconName = Platform.OS === "ios"
+              ? `ios-map${focused ? "" : "-outline"}`
+              : "md-map";
             break;
-          case 'Settings':
-            iconName = Platform.OS === 'ios'
-              ? `ios-options${focused ? '' : '-outline'}`
-              : 'md-options';
         }
         return (
           <Ionicons
@@ -50,11 +42,11 @@ export default TabNavigator(
             color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
           />
         );
-      },
+      }
     }),
     tabBarComponent: TabBarBottom,
-    tabBarPosition: 'bottom',
+    tabBarPosition: "bottom",
     animationEnabled: false,
-    swipeEnabled: false,
+    swipeEnabled: false
   }
 );
