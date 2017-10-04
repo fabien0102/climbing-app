@@ -3,7 +3,7 @@ import { Container, Button, Text, H1 } from "native-base";
 import qs from "qs";
 import jwtDecode from "jwt-decode";
 import { Linking, AsyncStorage } from "react-native";
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import Servers from "../constants/Servers";
 import Logo from "../components/AnimatedLogo";
@@ -19,15 +19,21 @@ export class LoginScreen extends React.Component {
   };
 
   render() {
+    const isLogged = has(this.props, "currentUser.user.id");
+
     return (
       <Container style={styles.container}>
         <Container style={styles.logo}>
           <Logo large />
           <H1 style={styles.logoTitle}>Climbing stats</H1>
         </Container>
-        <Button block primary rounded large onPress={this.onLoginPress}>
-          <Text>Login</Text>
-        </Button>
+        {isLogged
+          ? <Button block danger rounded large onPress={this.onLogoutPress}>
+              <Text>Logout</Text>
+            </Button>
+          : <Button block primary rounded large onPress={this.onLoginPress}>
+              <Text>Login</Text>
+            </Button>}
       </Container>
     );
   }
@@ -38,7 +44,8 @@ export class LoginScreen extends React.Component {
 
   componentWillUpdate(nextProps) {
     const isLogged = has(nextProps, "currentUser.user.id");
-    if (isLogged) nextProps.navigation.navigate("Main");
+    const isOnScreen = nextProps.navigation.state.routeName === "Login";
+    if (isLogged && isOnScreen) nextProps.navigation.navigate("Main");
   }
 
   onAuth0Redirect = async event => {
@@ -57,7 +64,7 @@ export class LoginScreen extends React.Component {
         const user = await this.props.currentUser.refetch();
 
         // user already exists
-        if (user.data.user) return this.props.navigation.navigate("Main");
+        if (user.data.user) return;
 
         // else -> createUsers
         const newUser = await this.props.createUser({
@@ -88,6 +95,11 @@ export class LoginScreen extends React.Component {
     })}`;
 
     Expo.WebBrowser.openBrowserAsync(redirectUrl);
+  };
+
+  onLogoutPress = async () => {
+    await AsyncStorage.clear();
+    await this.props.client.resetStore();
   };
 
   /**
@@ -135,7 +147,15 @@ query currentUser {
 }
 `;
 
-export default compose(
-  graphql(createUserMutation, { name: "createUser" }),
-  graphql(getUserQuery, { name: "currentUser" })
-)(LoginScreen);
+export default withApollo(
+  compose(
+    graphql(createUserMutation, {
+      name: "createUser",
+      options: { fetchPolicy: "network-only" }
+    }),
+    graphql(getUserQuery, {
+      name: "currentUser",
+      options: { fetchPolicy: "network-only" }
+    })
+  )(LoginScreen)
+);
