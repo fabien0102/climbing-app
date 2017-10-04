@@ -25,7 +25,7 @@ export class LoginScreen extends React.Component {
           <Logo large />
           <H1 style={styles.logoTitle}>Climbing stats</H1>
         </Container>
-        <Button block primary onPress={this.onLoginPress}>
+        <Button block primary rounded large onPress={this.onLoginPress}>
           <Text>Login</Text>
         </Button>
       </Container>
@@ -57,7 +57,7 @@ export class LoginScreen extends React.Component {
         const user = await this.props.currentUser.refetch();
 
         // user already exists
-        if (user.data.user) return;
+        if (user.data.user) return this.props.navigation.navigate("Main");
 
         // else -> createUsers
         const newUser = await this.props.createUser({
@@ -102,6 +102,11 @@ export class LoginScreen extends React.Component {
       .join("");
   };
 
+  /**
+   * Get nonce.
+   * 
+   * Generate if not exists else just return the stocked value.
+   */
   getNonce = async () => {
     let nonce = await AsyncStorage.getItem("nonce");
     if (!nonce) {

@@ -7,6 +7,9 @@ import { View, Text } from "react-native";
  * List of walls
  */
 export default class WallsScreen extends React.Component {
+  static navigationOptions = {
+    title: "Walls"
+  };
   render() {
     return (
       <View>

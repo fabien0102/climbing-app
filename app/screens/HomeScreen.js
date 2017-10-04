@@ -10,6 +10,10 @@ import { View, Text } from "react-native";
  *  - max grade reach
  */
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: "Home"
+  };
+
   render() {
     return (
       <View>
