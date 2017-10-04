@@ -28,9 +28,20 @@ export class LoginScreen extends React.Component {
           <H1 style={styles.logoTitle}>Climbing stats</H1>
         </Container>
         {isLogged
-          ? <Button block danger rounded large onPress={this.onLogoutPress}>
-              <Text>Logout</Text>
-            </Button>
+          ? <Container style={styles.logoutContainer}>
+              <Button block danger rounded large onPress={this.onLogoutPress}>
+                <Text>Logout</Text>
+              </Button>
+              <Button
+                block
+                primary
+                rounded
+                large
+                onPress={this.onBackToHomePress}
+              >
+                <Text>Go back to home</Text>
+              </Button>
+            </Container>
           : <Button block primary rounded large onPress={this.onLoginPress}>
               <Text>Login</Text>
             </Button>}
@@ -100,6 +111,10 @@ export class LoginScreen extends React.Component {
   onLogoutPress = async () => {
     await AsyncStorage.clear();
     await this.props.client.resetStore();
+  };
+
+  onBackToHomePress = () => {
+    this.props.navigation.navigate("Main");
   };
 
   /**

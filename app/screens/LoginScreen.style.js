@@ -21,5 +21,11 @@ export default StyleSheet.create({
     color: "white",
     margin: 20,
     fontWeight: "bold"
+  },
+  logoutContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-around",
+    flexGrow: 0.3
   }
 });
