@@ -38,8 +38,7 @@ networkInterface.use([
 ]);
 
 const client = new ApolloClient({
-  networkInterface,
-  dataIdFromObject: o => o.id
+  networkInterface
 });
 
 export default class App extends React.Component {
