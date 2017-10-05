@@ -13,10 +13,12 @@ import {
   Container,
   Toast
 } from "native-base";
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import styles from "./RoutesScreen.style";
+import { getUserQuery } from "./LoginScreen";
+import { map } from "lodash";
 
 /**
  * Routes screen
@@ -32,6 +34,7 @@ export class RoutesScreen extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     if (this.props.data.loading) {
       return <AnimatedLogo />;
     } else if (this.props.data.error) {
@@ -57,6 +60,19 @@ export class RoutesScreen extends React.Component {
           <ListItem onPress={() => this.onRoutePress(route)}>
             <Left style={styles.leftIcon}>
               <RouteIcon color={route.color} grade={route.grade} size="small" />
+              {map(route.tries, "successLevel").includes(5)
+                ? <Icon
+                    name="checkmark"
+                    style={{
+                      left: 30,
+                      top: 10,
+                      position: "absolute",
+                      backgroundColor: "transparent",
+                      fontSize: 30,
+                      color: "green"
+                    }}
+                  />
+                : null}
             </Left>
             <Body>
               <Text>{route.color} - level {route.grade}</Text>
@@ -72,6 +88,7 @@ export class RoutesScreen extends React.Component {
             full
             style={styles.flashButton}
             onPress={() =>
+              // TODO add a perfect try and refetch
               Toast.show({
                 text: `You have flash ${rowData.color} route!`,
                 position: "bottom",
@@ -101,19 +118,25 @@ export class RoutesScreen extends React.Component {
 }
 
 export const routesQuery = gql`
-query ($wallId: ID!) {
+query ($wallId: ID!, $userId: ID!) {
   allRoutes(orderBy: grade_ASC, filter: {wall: {id: $wallId}}) {
     id
     color
     grade
     successRate
     averageTries
+    tries (filter: {user: {id: $userId}}) {
+      successLevel
+    }
   }
 }
 `;
 
-export default graphql(routesQuery, {
-  options: ({ navigation: { state: { params: { id } } } }) => ({
-    variables: { wallId: id }
+export default compose(
+  graphql(getUserQuery, { name: "currentUser" }),
+  graphql(routesQuery, {
+    options: ({ navigation: { state: { params: { id } } }, currentUser }) => ({
+      variables: { wallId: id, userId: currentUser.user.id }
+    })
   })
-})(RoutesScreen);
+)(RoutesScreen);
