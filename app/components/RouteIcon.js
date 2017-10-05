@@ -1,6 +1,10 @@
 import React from "react";
 import { Svg } from "expo";
 
+// TODO remove when Expo 22 will be release
+// https://github.com/expo/expo/issues/677
+console.ignoredYellowBox = ["Warning: PropTypes has been moved"];
+
 /**
  * Generate a beautiful color icon with the flag and grip color
  */

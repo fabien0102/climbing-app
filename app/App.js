@@ -1,4 +1,5 @@
 import React from "react";
+import { Root } from "native-base";
 import {
   AsyncStorage,
   Platform,
@@ -58,12 +59,14 @@ export default class App extends React.Component {
     } else {
       return (
         <ApolloProvider client={client}>
-          <View style={styles.container}>
-            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            {Platform.OS === "android" &&
-              <View style={styles.statusBarUnderlay} />}
-            <RootNavigation />
-          </View>
+          <Root>
+            <View style={styles.container}>
+              {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+              {Platform.OS === "android" &&
+                <View style={styles.statusBarUnderlay} />}
+              <RootNavigation />
+            </View>
+          </Root>
         </ApolloProvider>
       );
     }
