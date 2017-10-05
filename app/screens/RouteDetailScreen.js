@@ -18,6 +18,7 @@ import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import Loading from "../components/Loading";
 import { getUserQuery } from "../screens/LoginScreen";
+import { round } from "lodash";
 
 const cancelButtonIndex = 6;
 
@@ -98,7 +99,7 @@ export class RouteDetailScreen extends React.Component {
             </Right>
           </CardItem>
           {this.renderPart("Created at", route.createdAt.split("T")[0])}
-          {this.renderPart("Success rate", route.successRate)}
+          {this.renderPart("Success rate", round(route.successRate * 100, 2) + "%")}
           {this.renderPart("Average tries", route.averageTries)}
           <CardItem header style={style.header}>
             <Text>Tries</Text>
@@ -109,8 +110,12 @@ export class RouteDetailScreen extends React.Component {
               </CardItem>
             : route.tries.map(t => (
                 <CardItem key={t.id}>
-                  <Text>{t.createdAt.split('T')[0]}</Text>
-                  <Text>- {this.getStarsString(t.successLevel)}</Text>
+                  <Left>
+                    <Text>{t.createdAt.split("T")[0]}</Text>
+                  </Left>
+                  <Right>
+                    <Text>- {this.getStarsString(t.successLevel)}</Text>
+                  </Right>
                 </CardItem>
               ))}
         </Card>
