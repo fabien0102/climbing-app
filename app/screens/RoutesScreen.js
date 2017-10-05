@@ -34,7 +34,6 @@ export class RoutesScreen extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     if (this.props.data.loading) {
       return <AnimatedLogo />;
     } else if (this.props.data.error) {
