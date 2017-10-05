@@ -6,7 +6,8 @@
   "license": "MIT",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "test": "node ./node_modules/jest/bin/jest.js --watch"
+    "test": "node ./node_modules/jest/bin/jest.js",
+    "test:watch": "node ./node_modules/jest/bin/jest.js --watch"
   },
   "jest": {
     "preset": "jest-expo"
