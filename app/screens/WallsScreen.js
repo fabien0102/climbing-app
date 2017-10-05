@@ -1,6 +1,6 @@
 import React from "react";
 import { ListView, RefreshControl } from "react-native";
-import AnimatedLogo from "../components/AnimatedLogo";
+import Loading from "../components/Loading";
 import { List, ListItem, Text, Icon, Body, Right } from "native-base";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
@@ -24,7 +24,7 @@ export class WallsScreen extends React.Component {
 
   render() {
     if (this.props.data.loading) {
-      return <AnimatedLogo autoplay />;
+      return <Loading />;
     } else if (this.props.data.error) {
       return <Text>{this.props.data.error.message}</Text>;
     }

@@ -1,6 +1,6 @@
 import React from "react";
 import { ListView, RefreshControl } from "react-native";
-import AnimatedLogo from "../components/AnimatedLogo";
+import AnimatedLogo from "../components/Loading";
 import {
   List,
   ListItem,
@@ -33,11 +33,7 @@ export class RoutesScreen extends React.Component {
 
   render() {
     if (this.props.data.loading) {
-      return (
-        <Container style={styles.container}>
-          <AnimatedLogo autoplay />
-        </Container>
-      );
+      return <AnimatedLogo />;
     } else if (this.props.data.error) {
       return <Text>{this.props.data.error.message}</Text>;
     }
