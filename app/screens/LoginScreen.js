@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Button, Text, H1 } from "native-base";
 import qs from "qs";
 import jwtDecode from "jwt-decode";
-import { Linking, AsyncStorage } from "react-native";
+import { Linking, AsyncStorage, Alert } from "react-native";
 import { graphql, compose, withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import Servers from "../constants/Servers";
@@ -86,12 +86,12 @@ export class LoginScreen extends React.Component {
         });
         await this.props.currentUser.refetch();
       } catch (err) {
-        console.error(err); // TODO show error in the screen
+        Alert("Error", err);
       }
     } else if (res.error) {
-      console.error(res); // TODO show error in the screen
+      Alert("Error", res.error);
     } else {
-      console.log("Something wrong appends"); // TODO show error in the screen
+      Alert("Error", "Something wrong appends");
     }
   };
 
