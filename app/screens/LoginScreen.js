@@ -1,8 +1,9 @@
 import React from "react";
+import { AuthSession } from "expo";
 import { Container, Button, Text, H1 } from "native-base";
 import qs from "qs";
 import jwtDecode from "jwt-decode";
-import { Linking, AsyncStorage, Alert } from "react-native";
+import { AsyncStorage, Alert } from "react-native";
 import { graphql, compose, withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import Servers from "../constants/Servers";
@@ -51,58 +52,49 @@ export class LoginScreen extends React.Component {
     );
   }
 
-  componentDidMount() {
-    Linking.addEventListener("url", this.onAuth0Redirect);
-  }
-
   componentWillUpdate(nextProps) {
     const isLogged = has(nextProps, "me.id");
     const isOnScreen = nextProps.navigation.state.routeName === "Login";
     if (isLogged && isOnScreen) nextProps.navigation.navigate("Main");
   }
 
-  onAuth0Redirect = async event => {
-    if (!event.url.includes("+/redirect")) return;
+  handleParams = async res => {
+    if (res.error || !res.id_token) {
+      Alert.alert(
+        "Error",
+        res.error_description || "something went wrong while logging in"
+      );
+      return;
+    }
 
-    Expo.WebBrowser.dismissBrowser();
-    const [, queryString] = event.url.split("#");
-    const res = qs.parse(queryString);
+    try {
+      const { nickname } = jwtDecode(res.id_token);
+      await AsyncStorage.setItem("token", res.id_token);
+      const user = await this.props.me.refetch();
 
-    if (res.id_token) {
-      try {
-        const { nickname } = jwtDecode(res.id_token);
-        await AsyncStorage.setItem("token", res.id_token);
+      // user already exists
+      if (user.data.user) return;
 
-        // refetch user
-        const user = await this.props.me.refetch();
-        console.log(user);
-
-        // user already exists
-        if (user.data.user) return;
-
-        // else -> createUsers
-        const newUser = await this.props.createUser(res.id_token, nickname);
-      } catch (err) {
-        Alert("Error", err);
-      }
-    } else if (res.error) {
-      Alert("Error", res.error);
-    } else {
-      Alert("Error", "Something wrong appends");
+      // else -> createUsers
+      const newUser = await this.props.createUser(idToken, pseudo);
+    } catch (err) {
+      Alert.alert("Error", err);
     }
   };
 
   onLoginPress = async () => {
-    const redirectUrl = `${Servers.auth0.domain}/authorize?${qs.stringify({
-      client_id: Servers.auth0.clientId,
-      response_type: "id_token",
-      scope: "openid profile",
-      nonce: await this.getNonce(),
-      redirect_uri: Servers.expo.redirectUri,
-      state: Servers.expo.redirectUri
-    })}`;
+    const redirectUrl = AuthSession.getRedirectUrl();
+    const result = await AuthSession.startAsync({
+      authUrl: `${Servers.auth0.domain}/authorize?${qs.stringify({
+        client_id: Servers.auth0.clientId,
+        response_type: "id_token",
+        scope: "openid profile",
+        nonce: await this.getNonce(),
+        redirect_uri: redirectUrl
+      })}`
+    });
 
-    Expo.WebBrowser.openBrowserAsync(redirectUrl);
+    if (result.type === "success") return this.handleParams(result.params)
   };
 
   onLogoutPress = async () => {
