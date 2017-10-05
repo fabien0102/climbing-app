@@ -10,6 +10,7 @@ import {
   Left,
   Right,
   View,
+  Spinner,
   ActionSheet
 } from "native-base";
 import { StyleSheet } from "react-native";
@@ -18,7 +19,7 @@ import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import Loading from "../components/Loading";
 import { getUserQuery } from "../screens/LoginScreen";
-import { round } from "lodash";
+import { round, omit } from "lodash";
 
 const cancelButtonIndex = 6;
 
@@ -44,15 +45,32 @@ export class RouteDetailScreen extends React.Component {
       },
       buttonIndex => {
         if (buttonIndex === cancelButtonIndex) return;
-        this.props
-          .addTryMutation({
-            variables: {
+        // TODO move this part bellow
+        this.props.addTryMutation({
+          variables: {
+            successLevel: buttonIndex,
+            userId: this.props.currentUser.user.id,
+            routeId: this.props.data.Route.id
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createTry: {
+              __typename: "Try",
+              createdAt: new Date().toISOString(),
+              id: -1,
+              route: {
+                __typename: "Route",
+                averageTries: -1,
+                successRate: -1
+              },
               successLevel: buttonIndex,
-              userId: this.props.currentUser.user.id,
-              routeId: this.props.data.Route.id
+              user: {
+                __typename: "User",
+                id: this.props.currentUser.user.id
+              }
             }
-          })
-          .then(() => this.props.data.refetch());
+          }
+        });
       }
     );
   };
@@ -99,7 +117,10 @@ export class RouteDetailScreen extends React.Component {
             </Right>
           </CardItem>
           {this.renderPart("Created at", route.createdAt.split("T")[0])}
-          {this.renderPart("Success rate", round(route.successRate * 100, 2) + "%")}
+          {this.renderPart(
+            "Success rate",
+            round(route.successRate * 100, 2) + "%"
+          )}
           {this.renderPart("Average tries", route.averageTries)}
           <CardItem header style={style.header}>
             <Text>Tries</Text>
@@ -109,12 +130,14 @@ export class RouteDetailScreen extends React.Component {
                 <Text>No try bro!</Text>
               </CardItem>
             : route.tries.map(t => (
-                <CardItem key={t.id}>
+                <CardItem key={t.id} style={t.id < 0 ? { opacity: 0.2 } : {}}>
                   <Left>
                     <Text>{t.createdAt.split("T")[0]}</Text>
                   </Left>
                   <Right>
-                    <Text>- {this.getStarsString(t.successLevel)}</Text>
+                    <Text style={{ color: "orange" }}>
+                      {this.getStarsString(t.successLevel)}
+                    </Text>
                   </Right>
                 </CardItem>
               ))}
@@ -134,7 +157,7 @@ const style = StyleSheet.create({
 });
 
 const routeDetailQuery = gql`
-query ($id: ID!) {
+query routeDetailQuery($id: ID!) {
   Route(id: $id) {
     id
     createdAt
@@ -154,10 +177,20 @@ query ($id: ID!) {
 }
 `;
 
+// TODO use fragment for tries props
 const addTryMutation = gql`
-mutation ($routeId: ID, $userId: ID, $successLevel: Int!) {
+mutation addTryMutation($routeId: ID, $userId: ID, $successLevel: Int!) {
   createTry(routeId: $routeId, successLevel: $successLevel, userId: $userId) {
     id
+    successLevel
+    createdAt
+    user {
+      id
+    }
+    route {
+      successRate
+      averageTries
+    }
   }
 }
 `;
@@ -168,6 +201,32 @@ export default compose(
       variables: { id }
     })
   }),
-  graphql(addTryMutation, { name: "addTryMutation" }),
+  graphql(addTryMutation, {
+    name: "addTryMutation",
+    options: ({ navigation: { state: { params: { id } } } }) => ({
+      update: (proxy, { data: { createTry } }) => {
+        // Get cached data
+        let routeDetailData = proxy.readQuery({
+          query: routeDetailQuery,
+          variables: { id }
+        });
+
+        // Mutate with received data
+        if (createTry.route.averageTries >= 0) {
+          Object.assign(routeDetailData.Route, createTry.route);
+        }
+        routeDetailData.Route.tries.unshift(omit(createTry, "route"));
+
+        // Update cache
+        proxy.writeQuery({
+          query: routeDetailQuery,
+          variables: { id },
+          routeDetailData
+        });
+
+        // TODO update route if success level is 5
+      }
+    })
+  }),
   graphql(getUserQuery, { name: "currentUser" })
 )(RouteDetailScreen);
