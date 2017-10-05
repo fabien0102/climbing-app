@@ -53,6 +53,8 @@ export class WallsScreen extends React.Component {
             </Right>
           </ListItem>
         )}
+        renderLeftHiddenRow={() => null}
+        renderRightHiddenRow={() => null}
       />
     );
   }
