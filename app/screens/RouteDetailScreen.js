@@ -18,8 +18,8 @@ import { graphql, compose } from "react-apollo";
 import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import Loading from "../components/Loading";
-import { getUserQuery } from "../screens/LoginScreen";
 import { round, omit } from "lodash";
+import withMe from "../queries/withMe"
 
 const cancelButtonIndex = 6;
 
@@ -49,7 +49,7 @@ export class RouteDetailScreen extends React.Component {
         this.props.addTryMutation({
           variables: {
             successLevel: buttonIndex,
-            userId: this.props.currentUser.user.id,
+            userId: this.props.me.id,
             routeId: this.props.data.Route.id
           },
           optimisticResponse: {
@@ -66,7 +66,7 @@ export class RouteDetailScreen extends React.Component {
               successLevel: buttonIndex,
               user: {
                 __typename: "User",
-                id: this.props.currentUser.user.id
+                id: this.props.me.id
               }
             }
           }
@@ -228,5 +228,5 @@ export default compose(
       }
     })
   }),
-  graphql(getUserQuery, { name: "currentUser" })
+  withMe
 )(RouteDetailScreen);

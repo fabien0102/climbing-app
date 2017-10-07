@@ -9,6 +9,8 @@ import Servers from "../constants/Servers";
 import Logo from "../components/AnimatedLogo";
 import styles from "./LoginScreen.style";
 import { has } from "lodash";
+import withCreateUser from "../queries/withCreateUser";
+import withMe from "../queries/withMe";
 
 /**
  * Login screen
@@ -19,7 +21,7 @@ export class LoginScreen extends React.Component {
   };
 
   render() {
-    const isLogged = has(this.props, "currentUser.user.id");
+    const isLogged = has(this.props, "me.id");
 
     return (
       <Container style={styles.container}>
@@ -54,7 +56,7 @@ export class LoginScreen extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    const isLogged = has(nextProps, "currentUser.user.id");
+    const isLogged = has(nextProps, "me.id");
     const isOnScreen = nextProps.navigation.state.routeName === "Login";
     if (isLogged && isOnScreen) nextProps.navigation.navigate("Main");
   }
@@ -72,19 +74,14 @@ export class LoginScreen extends React.Component {
         await AsyncStorage.setItem("token", res.id_token);
 
         // refetch user
-        const user = await this.props.currentUser.refetch();
+        const user = await this.props.me.refetch();
+        console.log(user);
 
         // user already exists
         if (user.data.user) return;
 
         // else -> createUsers
-        const newUser = await this.props.createUser({
-          variables: {
-            idToken: res.id_token,
-            pseudo: nickname
-          }
-        });
-        await this.props.currentUser.refetch();
+        const newUser = await this.props.createUser(res.id_token, nickname);
       } catch (err) {
         Alert("Error", err);
       }
@@ -144,33 +141,4 @@ export class LoginScreen extends React.Component {
   };
 }
 
-export const createUserMutation = gql`
-mutation createUser($idToken: String!, $pseudo: String!) {
-  createUser(authProvider: {auth0: {idToken: $idToken}}, pseudo: $pseudo) {
-    id
-    auth0UserId
-  }
-}
-`;
-
-export const getUserQuery = gql`
-query currentUser {
-  user {
-    id
-    pseudo
-  }
-}
-`;
-
-export default withApollo(
-  compose(
-    graphql(createUserMutation, {
-      name: "createUser",
-      options: { fetchPolicy: "network-only" }
-    }),
-    graphql(getUserQuery, {
-      name: "currentUser",
-      options: { fetchPolicy: "network-only" }
-    })
-  )(LoginScreen)
-);
+export default withApollo(compose(withCreateUser, withMe)(LoginScreen));

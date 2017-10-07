@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { getUserQuery } from "./LoginScreen";
 import { graphql } from "react-apollo";
+import withMe from "../queries/withMe";
 
 /**
  * Home screen
@@ -20,10 +20,10 @@ export class HomeScreen extends React.Component {
     return (
       <View>
         <Text>HomeScreen</Text>
-        <Text>Welcome {this.props.me.user.pseudo}</Text>
+        <Text>Welcome {this.props.me.pseudo}</Text>
       </View>
     );
   }
 }
 
-export default graphql(getUserQuery, { name: "me" })(HomeScreen);
+export default withMe(HomeScreen);

@@ -17,8 +17,8 @@ import { graphql, compose } from "react-apollo";
 import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import styles from "./RoutesScreen.style";
-import { getUserQuery } from "./LoginScreen";
 import { map } from "lodash";
+import withMe from "../queries/withMe";
 
 /**
  * Routes screen
@@ -132,10 +132,10 @@ query ($wallId: ID!, $userId: ID!) {
 `;
 
 export default compose(
-  graphql(getUserQuery, { name: "currentUser" }),
+  withMe,
   graphql(routesQuery, {
-    options: ({ navigation: { state: { params: { id } } }, currentUser }) => ({
-      variables: { wallId: id, userId: currentUser.user.id }
+    options: ({ navigation: { state: { params: { id } } }, me }) => ({
+      variables: { wallId: id, userId: me.id }
     })
   })
 )(RoutesScreen);
