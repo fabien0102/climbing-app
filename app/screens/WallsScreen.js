@@ -2,8 +2,7 @@ import React from "react";
 import { ListView, RefreshControl } from "react-native";
 import Loading from "../components/Loading";
 import { List, ListItem, Text, Icon, Body, Right } from "native-base";
-import { graphql } from "react-apollo";
-import gql from "graphql-tag";
+import withWalls from "../queries/withWalls";
 
 /**
  * Walls screen
@@ -68,13 +67,4 @@ export class WallsScreen extends React.Component {
   };
 }
 
-const wallsQuery = gql`
-{
-  allWalls(orderBy: name_ASC) {
-    id
-    name
-  }
-}
-`;
-
-export default graphql(wallsQuery)(WallsScreen);
+export default withWalls(WallsScreen);
