@@ -13,12 +13,12 @@ import {
   Container,
   Toast
 } from "native-base";
-import { graphql, compose } from "react-apollo";
-import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import styles from "./RoutesScreen.style";
 import { map } from "lodash";
+import { compose } from "react-apollo";
 import withMe from "../queries/withMe";
+import withRoutes from "../queries/withRoutes";
 
 /**
  * Routes screen
@@ -131,11 +131,4 @@ query ($wallId: ID!, $userId: ID!) {
 }
 `;
 
-export default compose(
-  withMe,
-  graphql(routesQuery, {
-    options: ({ navigation: { state: { params: { id } } }, me }) => ({
-      variables: { wallId: id, userId: me.id }
-    })
-  })
-)(RoutesScreen);
+export default compose(withMe, withRoutes)(RoutesScreen);
