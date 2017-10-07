@@ -1,0 +1,6 @@
+query AllWallsQuery {
+  allWalls(orderBy: name_ASC) {
+    id
+    name
+  }
+}
