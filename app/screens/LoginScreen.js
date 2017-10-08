@@ -5,7 +5,6 @@ import qs from "qs";
 import jwtDecode from "jwt-decode";
 import { AsyncStorage, Alert } from "react-native";
 import { graphql, compose, withApollo } from "react-apollo";
-import gql from "graphql-tag";
 import Servers from "../constants/Servers";
 import Logo from "../components/AnimatedLogo";
 import styles from "./LoginScreen.style";

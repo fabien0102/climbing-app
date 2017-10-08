@@ -15,11 +15,12 @@ import {
 } from "native-base";
 import { StyleSheet } from "react-native";
 import { graphql, compose } from "react-apollo";
-import gql from "graphql-tag";
 import RouteIcon from "../components/RouteIcon";
 import Loading from "../components/Loading";
 import { round, omit } from "lodash";
-import withMe from "../queries/withMe"
+import withMe from "../queries/withMe";
+import withRouteDetail from "../queries/withRouteDetail";
+import withAddTry from "../queries/withAddTry";
 
 const cancelButtonIndex = 6;
 
@@ -45,31 +46,10 @@ export class RouteDetailScreen extends React.Component {
       },
       buttonIndex => {
         if (buttonIndex === cancelButtonIndex) return;
-        // TODO move this part bellow
-        this.props.addTryMutation({
-          variables: {
-            successLevel: buttonIndex,
-            userId: this.props.me.id,
-            routeId: this.props.data.Route.id
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createTry: {
-              __typename: "Try",
-              createdAt: new Date().toISOString(),
-              id: -1,
-              route: {
-                __typename: "Route",
-                averageTries: -1,
-                successRate: -1
-              },
-              successLevel: buttonIndex,
-              user: {
-                __typename: "User",
-                id: this.props.me.id
-              }
-            }
-          }
+        this.props.addTry({
+          successLevel: buttonIndex,
+          userId: this.props.me.id,
+          routeId: this.props.data.Route.id
         });
       }
     );
@@ -156,77 +136,4 @@ const style = StyleSheet.create({
   }
 });
 
-const routeDetailQuery = gql`
-query routeDetailQuery($id: ID!) {
-  Route(id: $id) {
-    id
-    createdAt
-    color
-    grade
-    successRate
-    averageTries
-    tries(orderBy: createdAt_DESC) {
-      id
-      successLevel
-      createdAt
-      user {
-        id
-      }
-    }
-  }
-}
-`;
-
-// TODO use fragment for tries props
-const addTryMutation = gql`
-mutation addTryMutation($routeId: ID, $userId: ID, $successLevel: Int!) {
-  createTry(routeId: $routeId, successLevel: $successLevel, userId: $userId) {
-    id
-    successLevel
-    createdAt
-    user {
-      id
-    }
-    route {
-      successRate
-      averageTries
-    }
-  }
-}
-`;
-
-export default compose(
-  graphql(routeDetailQuery, {
-    options: ({ navigation: { state: { params: { id } } } }) => ({
-      variables: { id }
-    })
-  }),
-  graphql(addTryMutation, {
-    name: "addTryMutation",
-    options: ({ navigation: { state: { params: { id } } } }) => ({
-      update: (proxy, { data: { createTry } }) => {
-        // Get cached data
-        let routeDetailData = proxy.readQuery({
-          query: routeDetailQuery,
-          variables: { id }
-        });
-
-        // Mutate with received data
-        if (createTry.route.averageTries >= 0) {
-          Object.assign(routeDetailData.Route, createTry.route);
-        }
-        routeDetailData.Route.tries.unshift(omit(createTry, "route"));
-
-        // Update cache
-        proxy.writeQuery({
-          query: routeDetailQuery,
-          variables: { id },
-          routeDetailData
-        });
-
-        // TODO update route if success level is 5
-      }
-    })
-  }),
-  withMe
-)(RouteDetailScreen);
+export default compose(withMe, withRouteDetail, withAddTry)(RouteDetailScreen);
