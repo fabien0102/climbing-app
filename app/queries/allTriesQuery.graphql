@@ -1,0 +1,12 @@
+query AllTriesQuery($startDate: DateTime, $endDate: DateTime) {
+  allTries(filter: {createdAt_gte: $startDate, createdAt_lte: $endDate}) {
+    successLevel
+    createdAt
+    user {
+      id
+    }
+    route {
+      grade
+    }
+  }
+}
