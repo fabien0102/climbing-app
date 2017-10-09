@@ -13,7 +13,7 @@ import {
   Spinner,
   ActionSheet
 } from "native-base";
-import { StyleSheet } from "react-native";
+import { StyleSheet, RefreshControl } from "react-native";
 import { graphql, compose } from "react-apollo";
 import { getStarsString } from "../utils";
 import RouteIcon from "../components/RouteIcon";
@@ -35,6 +35,10 @@ const cancelButtonIndex = 6;
  * - Button to add a try
  */
 export class RouteDetailScreen extends React.Component {
+  state = {
+    refreshing: false
+  };
+
   onAddTryPress = () => {
     ActionSheet.show(
       {
@@ -80,7 +84,14 @@ export class RouteDetailScreen extends React.Component {
     const { wallName } = this.props.navigation.state.params;
 
     return (
-      <Content>
+      <Content
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+      >
         <Card>
           <CardItem>
             <Left>
@@ -118,6 +129,12 @@ export class RouteDetailScreen extends React.Component {
       </Content>
     );
   }
+
+  onRefresh = async () => {
+    this.setState({ refreshing: true });
+    await this.props.data.refetch();
+    this.setState({ refreshing: false });
+  };
 }
 
 const style = StyleSheet.create({

@@ -27,12 +27,9 @@ import withAddTry from "../queries/withAddTry";
  * Routes list of selected wall
  */
 export class RoutesScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      refreshing: false
-    };
-  }
+  state = {
+    refreshing: false
+  };
 
   render() {
     if (this.props.data.loading) {

@@ -14,12 +14,9 @@ export class WallsScreen extends React.Component {
     title: "Walls"
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      refreshing: false
-    };
-  }
+  state = {
+    refreshing: false
+  };
 
   render() {
     if (this.props.data.loading) {
