@@ -1,6 +1,12 @@
 # Climbing app
 
-A playground project to explore react-native (with expo) and graphcool.
+A playground project to explore react-native (with expo) and graphcool. It's a simple application to follow my climbing progression.
+
+## Screenshots
+
+![home](/assets/home.png)
+![routes](/assets/routes.png)
+![route detail](/assets/route-detail.png)
 
 ## Folders structure
 
@@ -18,6 +24,8 @@ A playground project to explore react-native (with expo) and graphcool.
 1. Open the project with [expo](https://expo.io/)
 
 ### Graphcool
+
+// TODO -> Convert to latest graphcool project (with .yml)
 
 1. Install graphcool cli -> `npm i -g graphcool`
 1. `graphcool init ./graphcool`
