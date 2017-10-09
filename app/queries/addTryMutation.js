@@ -1,3 +1,4 @@
+export default gql`
 mutation AddTryMutation($routeId: ID, $userId: ID, $successLevel: Int!) {
   createTry(routeId: $routeId, successLevel: $successLevel, userId: $userId) {
     id
@@ -16,3 +17,4 @@ mutation AddTryMutation($routeId: ID, $userId: ID, $successLevel: Int!) {
     }
   }
 }
+`;

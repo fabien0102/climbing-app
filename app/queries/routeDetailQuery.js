@@ -1,3 +1,4 @@
+export default gql`
 query RouteDetailQuery($id: ID!) {
   Route(id: $id) {
     id
@@ -16,3 +17,4 @@ query RouteDetailQuery($id: ID!) {
     }
   }
 }
+`;
