@@ -49,7 +49,8 @@ export class RouteDetailScreen extends React.Component {
         this.props.addTry({
           successLevel: buttonIndex,
           userId: this.props.me.id,
-          routeId: this.props.data.Route.id
+          routeId: this.props.data.Route.id,
+          wallId: this.props.navigation.state.params.wallId
         });
       }
     );

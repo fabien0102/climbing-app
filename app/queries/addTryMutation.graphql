@@ -7,8 +7,12 @@ mutation AddTryMutation($routeId: ID, $userId: ID, $successLevel: Int!) {
       id
     }
     route {
+      id
       successRate
       averageTries
+      wall {
+        id
+      }
     }
   }
 }

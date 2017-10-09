@@ -112,6 +112,7 @@ export class RoutesScreen extends React.Component {
   onRoutePress = route =>
     this.props.navigation.navigate("RouteDetail", {
       ...route,
+      wallId: this.props.navigation.state.params.id,
       wallName: this.props.navigation.state.params.name
     });
 }

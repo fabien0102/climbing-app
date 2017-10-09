@@ -1,37 +1,65 @@
 import { graphql } from "react-apollo";
 import addTryMutation from "./addTryMutation.graphql";
+import allRoutesQuery from "./allRoutesQuery.graphql";
 import routeDetailQuery from "./routeDetailQuery.graphql";
-import { omit } from "lodash";
+import { omit, pick } from "lodash";
 
-const updateRouteDetailQuery = (proxy, id, createTry) => {
-  // Get cached data
-  let routeDetailData = proxy.readQuery({
+const updateRouteDetailCache = (proxy, id, createTry) => {
+  const query = {
     query: routeDetailQuery,
     variables: { id }
-  });
+  };
+  
+  // Get cached data
+  let data = proxy.readQuery(query);
+
   // Mutate with received data
   if (createTry.route.averageTries >= 0) {
-    Object.assign(routeDetailData.Route, createTry.route);
+    Object.assign(
+      data.Route,
+      pick(createTry.route, ["successRate", "averageTries"])
+    );
   }
-  routeDetailData.Route.tries.unshift(omit(createTry, "route"));
+  data.Route.tries.unshift(omit(createTry, "route"));
+
   // Update cache
-  proxy.writeQuery({
-    query: routeDetailQuery,
-    variables: { id },
-    data: routeDetailData
+  proxy.writeQuery(Object.assign({}, query, { data }));
+};
+
+const updateAllRoutesCache = (proxy, id, createTry) => {
+  const query = {
+    query: allRoutesQuery,
+    variables: {
+      wallId: createTry.route.wall.id,
+      userId: createTry.user.id
+    }
+  };
+
+  // Get cached data
+  let data = proxy.readQuery(query);
+  
+  // Add try to current route (mutation)
+  data.allRoutes.forEach(route => {
+    if (route.id === id) route.tries.unshift(omit(createTry, "route"));
   });
+
+  // Update cache
+  proxy.writeQuery(Object.assign({}, query, { data }));
 };
 
 export default graphql(addTryMutation, {
   options: ({ navigation: { state: { params: { id } } } }) => ({
     update: (proxy, { data: { createTry } }) => {
-      updateRouteDetailQuery(proxy, id, createTry);
+      updateRouteDetailCache(proxy, id, createTry);
 
-      // TODO update route if success level is 5
+      // Update this data to have checkmark on the route
+      if (createTry.successLevel === 5) {
+        updateAllRoutesCache(proxy, id, createTry);
+      }
     }
   }),
   props: ({ mutate }) => ({
-    addTry: ({ successLevel, userId, routeId }) =>
+    addTry: ({ successLevel, userId, routeId, wallId }) =>
       mutate({
         variables: { successLevel, userId, routeId },
         optimisticResponse: {
@@ -42,8 +70,13 @@ export default graphql(addTryMutation, {
             id: -1,
             route: {
               __typename: "Route",
+              id: routeId,
               averageTries: -1,
-              successRate: -1
+              successRate: -1,
+              wall: {
+                __typename: "Wall",
+                id: wallId
+              }
             },
             successLevel,
             user: {
