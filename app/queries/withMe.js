@@ -1,5 +1,5 @@
 import { graphql } from "react-apollo";
-import userQuery from "./userQuery.graphql";
+import userQuery from "./userQuery";
 
 export default graphql(userQuery, {
   options: {
