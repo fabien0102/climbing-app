@@ -1,5 +1,7 @@
 # Climbing app
 
+https://expo.io/@fabien0102/climbing-app
+
 A playground project to explore react-native (with expo) and graphcool. It's a simple application to follow my climbing progression.
 
 ## Screenshots
