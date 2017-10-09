@@ -19,6 +19,7 @@ import { map } from "lodash";
 import { compose } from "react-apollo";
 import withMe from "../queries/withMe";
 import withRoutes from "../queries/withRoutes";
+import withAddTry from "../queries/withAddTry";
 
 /**
  * Routes screen
@@ -86,18 +87,25 @@ export class RoutesScreen extends React.Component {
           <Button
             full
             style={styles.flashButton}
-            onPress={() =>
-              // TODO add a perfect try and refetch
+            onPress={() => {
+              this.props.addTry({
+                successLevel: 5,
+                userId: this.props.me.id,
+                routeId: rowData.id,
+                wallId: this.props.navigation.state.params.id
+              });
               Toast.show({
                 text: `You have flash ${rowData.color} route!`,
                 position: "bottom",
                 duration: 1500,
                 type: "success"
-              })}
+              });
+            }}
           >
             <Icon active name="flash" />
           </Button>
         )}
+        disableLeftSwipe
         renderRightHiddenRow={() => null}
       />
     );
@@ -117,4 +125,4 @@ export class RoutesScreen extends React.Component {
     });
 }
 
-export default compose(withMe, withRoutes)(RoutesScreen);
+export default compose(withMe, withRoutes, withAddTry)(RoutesScreen);

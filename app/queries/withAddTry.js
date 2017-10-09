@@ -4,29 +4,33 @@ import allRoutesQuery from "./allRoutesQuery.graphql";
 import routeDetailQuery from "./routeDetailQuery.graphql";
 import { omit, pick } from "lodash";
 
-const updateRouteDetailCache = (proxy, id, createTry) => {
+const updateRouteDetailCache = (proxy, createTry) => {
   const query = {
     query: routeDetailQuery,
-    variables: { id }
+    variables: { id: createTry.route.id }
   };
-  
-  // Get cached data
-  let data = proxy.readQuery(query);
 
-  // Mutate with received data
-  if (createTry.route.averageTries >= 0) {
-    Object.assign(
-      data.Route,
-      pick(createTry.route, ["successRate", "averageTries"])
-    );
+  try {
+    // Get cached data
+    let data = proxy.readQuery(query);
+
+    // Mutate with received data
+    if (createTry.route.averageTries >= 0) {
+      Object.assign(
+        data.Route,
+        pick(createTry.route, ["successRate", "averageTries"])
+      );
+    }
+    data.Route.tries.unshift(omit(createTry, "route"));
+
+    // Update cache
+    proxy.writeQuery(Object.assign({}, query, { data }));
+  } catch (err) {
+    // Cache is probably not set yet, just ignore this
   }
-  data.Route.tries.unshift(omit(createTry, "route"));
-
-  // Update cache
-  proxy.writeQuery(Object.assign({}, query, { data }));
 };
 
-const updateAllRoutesCache = (proxy, id, createTry) => {
+const updateAllRoutesCache = (proxy, createTry) => {
   const query = {
     query: allRoutesQuery,
     variables: {
@@ -37,10 +41,11 @@ const updateAllRoutesCache = (proxy, id, createTry) => {
 
   // Get cached data
   let data = proxy.readQuery(query);
-  
+
   // Add try to current route (mutation)
   data.allRoutes.forEach(route => {
-    if (route.id === id) route.tries.unshift(omit(createTry, "route"));
+    if (route.id === createTry.route.id)
+      route.tries.unshift(omit(createTry, "route"));
   });
 
   // Update cache
@@ -48,13 +53,13 @@ const updateAllRoutesCache = (proxy, id, createTry) => {
 };
 
 export default graphql(addTryMutation, {
-  options: ({ navigation: { state: { params: { id } } } }) => ({
+  options: () => ({
     update: (proxy, { data: { createTry } }) => {
-      updateRouteDetailCache(proxy, id, createTry);
+      updateRouteDetailCache(proxy, createTry);
 
       // Update this data to have checkmark on the route
       if (createTry.successLevel === 5) {
-        updateAllRoutesCache(proxy, id, createTry);
+        updateAllRoutesCache(proxy, createTry);
       }
     }
   }),
