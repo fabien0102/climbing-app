@@ -15,8 +15,10 @@ import {
 } from "native-base";
 import { StyleSheet } from "react-native";
 import { graphql, compose } from "react-apollo";
+import { getStarsString } from "../utils";
 import RouteIcon from "../components/RouteIcon";
 import Loading from "../components/Loading";
+import Try from "../components/Try";
 import { round, omit } from "lodash";
 import withMe from "../queries/withMe";
 import withRouteDetail from "../queries/withRouteDetail";
@@ -33,13 +35,11 @@ const cancelButtonIndex = 6;
  * - Button to add a try
  */
 export class RouteDetailScreen extends React.Component {
-  getStarsString = stars => "★".repeat(stars) + "☆".repeat(5 - stars);
-
   onAddTryPress = () => {
     ActionSheet.show(
       {
         options: [...Array(6)]
-          .map((val, i) => this.getStarsString(i))
+          .map((val, i) => getStarsString(i))
           .concat("Cancel"),
         cancelButtonIndex,
         title: "Success rate"
@@ -110,17 +110,8 @@ export class RouteDetailScreen extends React.Component {
             ? <CardItem>
                 <Text>No try bro!</Text>
               </CardItem>
-            : route.tries.map(t => (
-                <CardItem key={t.id} style={t.id < 0 ? { opacity: 0.2 } : {}}>
-                  <Left>
-                    <Text>{t.createdAt.split("T")[0]}</Text>
-                  </Left>
-                  <Right>
-                    <Text style={{ color: "orange" }}>
-                      {this.getStarsString(t.successLevel)}
-                    </Text>
-                  </Right>
-                </CardItem>
+            : route.tries.map((t, i, arr) => (
+                <Try key={arr.length - i} try={t} />
               ))}
         </Card>
 
