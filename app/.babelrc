@@ -6,6 +6,11 @@
         "transform-react-jsx-source",
         "babel-plugin-inline-import-graphql-ast"
       ]
+    },
+    "production": {
+      "plugins": [
+        "babel-plugin-inline-import-graphql-ast"
+      ]
     }
   }
 }
