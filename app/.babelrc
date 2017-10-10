@@ -4,7 +4,12 @@
     "development": {
       "plugins": [
         "transform-react-jsx-source",
-        "babel-plugin-graphql-tag"
+        "babel-plugin-inline-import-graphql-ast"
+      ]
+    },
+    "production": {
+      "plugins": [
+        "babel-plugin-inline-import-graphql-ast"
       ]
     }
   }
