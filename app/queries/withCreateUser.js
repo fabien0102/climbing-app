@@ -1,6 +1,6 @@
 import { graphql } from "react-apollo";
-import createUserMutation from "./createUserMutation";
-import userQuery from "./userQuery";
+import createUserMutation from "./createUserMutation.graphql";
+import userQuery from "./userQuery.graphql";
 
   export default graphql(createUserMutation, {
     options: {

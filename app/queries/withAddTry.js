@@ -1,7 +1,7 @@
 import { graphql } from "react-apollo";
-import addTryMutation from "./addTryMutation";
-import allRoutesQuery from "./allRoutesQuery";
-import routeDetailQuery from "./routeDetailQuery";
+import addTryMutation from "./addTryMutation.graphql";
+import allRoutesQuery from "./allRoutesQuery.graphql";
+import routeDetailQuery from "./routeDetailQuery.graphql";
 import { omit, pick } from "lodash";
 
 const updateRouteDetailCache = (proxy, createTry) => {

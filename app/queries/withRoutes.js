@@ -1,5 +1,5 @@
 import { graphql } from "react-apollo";
-import allRoutesQuery from "./allRoutesQuery";
+import allRoutesQuery from "./allRoutesQuery.graphql";
 
 export default graphql(allRoutesQuery, {
   options: ({ navigation: { state: { params: { id } } }, me }) => ({
