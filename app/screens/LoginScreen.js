@@ -67,7 +67,11 @@ export class LoginScreen extends React.Component {
     }
 
     try {
-      const { nickname } = jwtDecode(res.id_token);
+      const { nickname, picture, user_id } = jwtDecode(res.id_token);
+
+      // avoid pseudo collision (discord pattern like)
+      const pseudo = `${nickname}#${user_id.split("|")[1].slice(0, 4)}`
+
       await AsyncStorage.setItem("token", res.id_token);
       const user = await this.props.me.refetch();
 
@@ -75,9 +79,9 @@ export class LoginScreen extends React.Component {
       if (user.data.user) return;
 
       // else -> createUsers
-      const newUser = await this.props.createUser(idToken, pseudo);
+      const newUser = await this.props.createUser(res.id_token, pseudo, picture);
     } catch (err) {
-      Alert.alert("Error", err);
+      Alert.alert("Error", err.message);
     }
   };
 
@@ -93,7 +97,7 @@ export class LoginScreen extends React.Component {
       })}`
     });
 
-    if (result.type === "success") return this.handleParams(result.params)
+    if (result.type === "success") return this.handleParams(result.params);
   };
 
   onLogoutPress = async () => {

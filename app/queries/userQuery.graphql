@@ -2,5 +2,6 @@ query UserQuery {
   user {
     id
     pseudo
+    picture
   }
 }
