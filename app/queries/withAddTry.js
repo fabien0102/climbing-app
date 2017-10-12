@@ -5,9 +5,13 @@ import routeDetailQuery from "./routeDetailQuery.graphql";
 import { omit, pick } from "lodash";
 
 const updateRouteDetailCache = (proxy, createTry) => {
+  // query
   const query = {
     query: routeDetailQuery,
-    variables: { id: createTry.route.id }
+    variables: {
+      id: createTry.route.id,
+      userId: createTry.user.id
+    }
   };
 
   try {
@@ -17,11 +21,11 @@ const updateRouteDetailCache = (proxy, createTry) => {
     // Mutate with received data
     if (createTry.route.averageTries >= 0) {
       Object.assign(
-        data.Route,
+        data.route,
         pick(createTry.route, ["successRate", "averageTries"])
       );
     }
-    data.Route.tries.unshift(omit(createTry, "route"));
+    data.route.tries.unshift(omit(createTry, "route"));
 
     // Update cache
     proxy.writeQuery(Object.assign({}, query, { data }));
