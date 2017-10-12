@@ -1,18 +1,15 @@
-query RouteDetailQuery($id: ID!) {
-  Route(id: $id) {
+query RouteDetailQuery($id: ID!, $userId: ID!) {
+  route: Route(id: $id) {
     id
     createdAt
     color
     grade
     successRate
     averageTries
-    tries(orderBy: createdAt_DESC) {
+    tries(orderBy: createdAt_DESC, filter: {user: {id: $userId}}) {
       id
       successLevel
       createdAt
-      user {
-        id
-      }
     }
   }
 }

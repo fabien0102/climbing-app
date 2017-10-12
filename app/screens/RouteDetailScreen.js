@@ -53,7 +53,7 @@ export class RouteDetailScreen extends React.Component {
         this.props.addTry({
           successLevel: buttonIndex,
           userId: this.props.me.id,
-          routeId: this.props.data.Route.id,
+          routeId: this.props.route.id,
           wallId: this.props.navigation.state.params.wallId
         });
       }
@@ -74,13 +74,13 @@ export class RouteDetailScreen extends React.Component {
   }
 
   render() {
-    if (this.props.data.loading) {
+    if (this.props.route.loading) {
       return <Loading />;
-    } else if (this.props.data.error) {
-      return <Text>{this.props.data.error.message}</Text>;
+    } else if (this.props.route.error) {
+      return <Text>{this.props.route.error.message}</Text>;
     }
 
-    const route = this.props.data.Route;
+    const route = this.props.route;
     const { wallName } = this.props.navigation.state.params;
 
     return (
@@ -132,7 +132,7 @@ export class RouteDetailScreen extends React.Component {
 
   onRefresh = async () => {
     this.setState({ refreshing: true });
-    await this.props.data.refetch();
+    await this.props.route.refetch();
     this.setState({ refreshing: false });
   };
 }

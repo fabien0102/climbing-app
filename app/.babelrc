@@ -1,15 +1,10 @@
 {
   "presets": ["babel-preset-expo"],
+  "plugins": ["babel-plugin-inline-import-graphql-ast"],
   "env": {
     "development": {
       "plugins": [
-        "transform-react-jsx-source",
-        "babel-plugin-inline-import-graphql-ast"
-      ]
-    },
-    "production": {
-      "plugins": [
-        "babel-plugin-inline-import-graphql-ast"
+        "transform-react-jsx-source"
       ]
     }
   }
