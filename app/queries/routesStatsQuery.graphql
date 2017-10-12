@@ -1,0 +1,14 @@
+query RoutesStatsQuery($userId: ID!, $startDate: DateTime, $endDate: DateTime) {
+  routes: allRoutes(filter: {
+    OR: {
+    	AND: {createdAt_lte: $endDate, removedAt_gte: $startDate}, # finished routes
+      AND: {createdAt_lte: $endDate, removedAt: null}            # current routes
+    }
+  }) {
+    grade
+    id
+    tries(filter: {user: {id: $userId}}, orderBy: createdAt_DESC) {
+      successLevel
+    }
+  }
+}

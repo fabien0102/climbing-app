@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withRoutesStats getStats should return correct value 1`] = `
+Array [
+  Object {
+    "afterWork": 1,
+    "finished": 5,
+    "flashed": 4,
+    "grade": "3",
+    "notFinished": 0,
+    "total": 35,
+  },
+  Object {
+    "afterWork": 6,
+    "finished": 13,
+    "flashed": 7,
+    "grade": "4",
+    "notFinished": 0,
+    "total": 50,
+  },
+  Object {
+    "afterWork": 3,
+    "finished": 7,
+    "flashed": 4,
+    "grade": "5",
+    "notFinished": 1,
+    "total": 75,
+  },
+  Object {
+    "afterWork": 1,
+    "finished": 5,
+    "flashed": 4,
+    "grade": "6",
+    "notFinished": 1,
+    "total": 71,
+  },
+  Object {
+    "afterWork": 0,
+    "finished": 0,
+    "flashed": 0,
+    "grade": "7",
+    "notFinished": 0,
+    "total": 26,
+  },
+  Object {
+    "afterWork": 0,
+    "finished": 0,
+    "flashed": 0,
+    "grade": "8",
+    "notFinished": 0,
+    "total": 2,
+  },
+]
+`;
