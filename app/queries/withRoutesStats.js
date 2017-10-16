@@ -1,8 +1,8 @@
 import { graphql } from "react-apollo";
 import routesStatsQuery from "./routesStatsQuery.graphql";
 import _ from "lodash";
+import { startOfWeek, endOfWeek } from "date-fns";
 
-// TODO
 export const getStats = routes => {
   return _(routes)
     .groupBy("grade")
@@ -25,6 +25,14 @@ export const getStats = routes => {
 };
 
 export default graphql(routesStatsQuery, {
+  options: ({ me: { id } }) => {
+    const today = new Date();
+    const startDate = startOfWeek(today).toISOString();
+    const endDate = endOfWeek(today).toISOString();
+    return {
+      variables: { userId: id, startDate, endDate, null: null }
+    };
+  },
   props: ({ data: { refetch, routes, loading, error } }) => {
     const stats = getStats(routes);
 
@@ -33,11 +41,11 @@ export default graphql(routesStatsQuery, {
         refetch,
         loading,
         error,
-        total,
         perGrade: stats,
-        flashCount: _.sumBy(stats, "flashed"),
-        afterWorkCount: _.sumBy(stats, "afterWork"),
-        notFinishedCount: _.sumBy(stats, "notFinished")
+        total: _.sumBy(stats, "total"),
+        flash: _.sumBy(stats, "flashed"),
+        afterWork: _.sumBy(stats, "afterWork"),
+        notFinished: _.sumBy(stats, "notFinished")
       }
     };
   }

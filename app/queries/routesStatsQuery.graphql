@@ -1,8 +1,8 @@
-query RoutesStatsQuery($userId: ID!, $startDate: DateTime, $endDate: DateTime) {
+query RoutesStatsQuery($userId: ID!, $startDate: DateTime, $endDate: DateTime, $null: DateTime) {
   routes: allRoutes(filter: {
     OR: {
     	AND: {createdAt_lte: $endDate, removedAt_gte: $startDate}, # finished routes
-      AND: {createdAt_lte: $endDate, removedAt: null}            # current routes
+      AND: {createdAt_lte: $endDate, removedAt: $null}            # current routes
     }
   }) {
     grade
