@@ -18,6 +18,7 @@
   "dependencies": {
     "apollo-client": "^1.9.3",
     "babel-plugin-inline-import-graphql-ast": "^2.0.1",
+    "date-fns": "^1.29.0",
     "expo": "^21.0.0",
     "graphql-tag": "^2.4.2",
     "jwt-decode": "^2.2.0",
