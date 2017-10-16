@@ -3,12 +3,16 @@ import {
   View,
   Text,
   Button,
+  Icon,
+  Left,
+  Header,
   Container,
   Content,
   H3,
   Thumbnail
 } from "native-base";
 import { Col, Grid, Row } from "react-native-easy-grid";
+import { NavigationActions } from "react-navigation";
 import { compose } from "react-apollo";
 import { endOfWeek, startOfWeek } from "date-fns";
 import { round, sumBy } from "lodash";
@@ -108,15 +112,26 @@ export class HomeScreen extends React.Component {
       return <Text>Error: {this.props.routesStats.error.message}</Text>;
 
     const { perGrade } = this.props.routesStats;
+
     return (
       <Container style={styles.main}>
         <Content>
           <Grid>
             <Row>
-              {/* back button */}
-              
-              {/* avatar */}
               <Grid style={styles.avatar}>
+                <Row style={styles.backButton}>
+                  <Button
+                    transparent
+                    onPress={() => {
+                      this.props.navigation.dispatch(
+                        // Back action
+                        NavigationActions.back({ key: null })
+                      );
+                    }}
+                  >
+                    <Icon name="arrow-back" style={{ color: "white" }} />
+                  </Button>
+                </Row>
                 <Row>
                   <Thumbnail large source={{ uri: this.props.me.picture }} />
                 </Row>

@@ -8,9 +8,13 @@ export default StyleSheet.create({
     backgroundColor: "#00ACBF",
     paddingTop: 30,
     paddingBottom: 15,
-    height: 160,
     alignItems: "center",
     marginBottom: 20
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 0
   },
   pseudo: {
     fontSize: 22,
