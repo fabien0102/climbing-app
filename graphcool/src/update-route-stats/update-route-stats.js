@@ -5,6 +5,7 @@ const moment = require('moment');
 const Lokka = require('lokka').Lokka;
 const Transport = require('lokka-transport-http').Transport;
 
+// TODO use proper/flexible way to have the token
 const headers = {
   Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1MDUzOTEzODMsImNsaWVudElkIjoiY2ozYThyeWp6ZDFxZzAxMzAxc2tiN3JoOCIsInByb2plY3RJZCI6ImNqN2J2d2Z0ajIxb3owMTAzc3YyaHJzbWciLCJwZXJtYW5lbnRBdXRoVG9rZW5JZCI6ImNqN2tmNXR2djB3OGswMTk1eWllY29vamkifQ.FbPomoVe66AKvhipsW9zUah5chbvlxBjbdMZx3b1mck'
 };
