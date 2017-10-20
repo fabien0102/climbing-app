@@ -2,10 +2,6 @@ import React from "react";
 import { Svg } from "expo";
 import { View } from "react-native";
 
-// TODO remove when Expo 22 will be release
-// https://github.com/expo/expo/issues/677
-console.ignoredYellowBox = ["Warning: PropTypes has been moved"];
-
 // Flashh grade flag colors
 export const flashhGrades = [
   "white",
