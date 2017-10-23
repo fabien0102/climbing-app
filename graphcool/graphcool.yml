@@ -55,3 +55,6 @@ permissions:
 - operation: Try.delete
   authenticated: true
   query: src/update-try.graphql
+
+rootTokens:
+  - boulderDBToken
