@@ -27,10 +27,10 @@ A playground project to explore react-native (with expo) and graphcool. It's a s
 
 ### Graphcool
 
-// TODO -> Convert to latest graphcool project (with .yml)
+1. Install graphcool cli -> `npm i -g graphcool@next`
+1. Go to graphcool folder -> `cd graphcool`
+1. Deploy your backend -> `graphcool deploy`
 
-1. Install graphcool cli -> `npm i -g graphcool`
-1. `graphcool init ./graphcool`
 
 ### Connecting app and graphcool
 
