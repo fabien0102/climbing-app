@@ -46,9 +46,10 @@ type Route @model {
   climbingStyle: String
   color: String!
   createdAt: DateTime!
+  openedAt: DateTime!
+  removedAt: DateTime
   grade: String!
   id: ID! @isUnique
-  removedAt: DateTime
   successRate: Float! @defaultValue(value: 0.0)
   tries: [Try!]! @relation(name: "TryOnRoute")
   updatedAt: DateTime!
