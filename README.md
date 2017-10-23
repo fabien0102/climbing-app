@@ -31,6 +31,12 @@ A playground project to explore react-native (with expo) and graphcool. It's a s
 1. Go to graphcool folder -> `cd graphcool`
 1. Deploy your backend -> `graphcool deploy`
 
+### Crawlers
+
+To have a database with real data, I made a small crawler for Flashh (Hamburg), you can use it or make you own crawler ;)
+
+Instructions are into each crawler root folder.
+
 
 ### Connecting app and graphcool
 
