@@ -1,0 +1,24 @@
+{
+  "name": "boulderdb.salondubloc.de",
+  "version": "1.0.0",
+  "description": "Crawler for boulderdb.salondubloc.de",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crawler",
+    "graphql",
+    "flashh"
+  ],
+  "author": "fabien0102 <fabien0102@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.5.0",
+    "cheerio": "^1.0.0-rc.2",
+    "graphql-request": "^1.4.0",
+    "inquirer": "^3.3.0",
+    "lodash": "^4.17.4",
+    "request": "^2.83.0"
+  }
+}
