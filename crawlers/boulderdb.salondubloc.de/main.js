@@ -13,19 +13,19 @@ inquirer
     {
       type: "input",
       name: "username",
-      message: "your username on boulderdb.salondubloc.de",
+      message: "Your username on boulderdb.salondubloc.de",
       default: cache.username
     },
     {
       type: "password",
       name: "password",
-      message: "your password on boulderdb.salondubloc.de",
+      message: "Your password on boulderdb.salondubloc.de",
       default: cache.password
     },
     {
       type: "list",
       name: "action",
-      message: "what do you want?",
+      message: "What do you want?",
       choices: [
         {
           value: "json",
@@ -41,14 +41,14 @@ inquirer
       when: answers => answers.action === "upload",
       type: "input",
       name: "graphcoolEndpoint",
-      message: "graph.cool simple API endpoint?",
+      message: "Graph.cool simple API endpoint?",
       default: cache.graphcoolEndpoint
     },
     {
       when: answers => answers.action === "upload",
       type: "input",
       name: "graphcoolToken",
-      message: "graph.cool token?",
+      message: "Graph.cool token?",
       default: cache.graphcoolToken
     }
   ])
