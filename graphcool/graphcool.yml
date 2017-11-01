@@ -5,7 +5,7 @@ functions:
     type: subscription
     handler: 
      code: 
-      src: src/update-route-stats/update-route-stats.js
+      src: src/update-route-stats/update-route-stats.ts
     query: src/update-route-stats/update-route-stats.graphql
 
 # Permissions rules
