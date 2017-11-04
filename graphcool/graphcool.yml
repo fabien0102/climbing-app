@@ -12,8 +12,8 @@ functions:
       code:
         src: ./src/auth0/auth0Authentication.ts
         environment:
-          AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
-          AUTH0_AUDIENCE: ${env:AUTH0_AUDIENCE}
+          AUTH0_DOMAIN: climbstat.eu.auth0.com
+          AUTH0_AUDIENCE: https://climbstat.eu.auth0.com/api/v2/
     type: resolver
     schema: ./src/auth0/auth0Authentication.graphql
   loggedInUser:
