@@ -7,6 +7,22 @@ functions:
      code: 
       src: src/update-route-stats/update-route-stats.ts
     query: src/update-route-stats/update-route-stats.graphql
+  auth0Authentication:
+    handler:
+      code:
+        src: ./src/auth0/auth0Authentication.ts
+        environment:
+          AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
+          AUTH0_AUDIENCE: ${env:AUTH0_AUDIENCE}
+    type: resolver
+    schema: ./src/auth0/auth0Authentication.graphql
+  loggedInUser:
+    handler:
+      code:
+        src: ./src/auth0/loggedInUser.ts
+    type: resolver
+    schema: ./src/auth0/loggedInUser.graphql
+
 
 # Permissions rules
 permissions:
