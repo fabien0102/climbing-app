@@ -13,6 +13,7 @@ import {
 } from "native-base";
 import { Col, Grid, Row } from "react-native-easy-grid";
 import { NavigationActions } from "react-navigation";
+import { RefreshControl, ScrollView } from "react-native";
 import { compose } from "react-apollo";
 import { endOfWeek, startOfWeek } from "date-fns";
 import { round, sumBy } from "lodash";
@@ -33,6 +34,10 @@ import styles from "./HomeScreen.style";
 export class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
+  };
+
+  state = {
+    refreshing: false
   };
 
   onPrevWeekPress = () => {};
@@ -106,6 +111,12 @@ export class HomeScreen extends React.Component {
     );
   }
 
+  onRefresh = async () => {
+    this.setState({ refreshing: true });
+    await this.props.routesStats.refetch();
+    this.setState({ refreshing: false });
+  };
+
   render() {
     if (this.props.routesStats.loading) return <Loading />;
     if (this.props.routesStats.error)
@@ -114,7 +125,15 @@ export class HomeScreen extends React.Component {
     const { perGrade } = this.props.routesStats;
 
     return (
-      <Container style={styles.main}>
+      <ScrollView
+        style={styles.main}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+      >
         <Content>
           <Grid>
             <Row>
@@ -148,7 +167,7 @@ export class HomeScreen extends React.Component {
             </Row>
           </Grid>
         </Content>
-      </Container>
+      </ScrollView>
     );
   }
 }
