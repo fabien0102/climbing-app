@@ -65,5 +65,21 @@ permissions:
   authenticated: true
   query: ./src/permissions/permitDeleteTry.graphql
 
+  # TryOnRoute
+- operation: TryOnRoute.*
+  authenticated: true
+
+  # TryOnUser
+- operation: TryOnUser.*
+  authenticated: true
+
+  # WallOnGym
+- operation: WallOnGym.connect
+  authenticated: true
+
+  # RouteOnWall
+- operation: RouteOnWall.connect
+  authenticated: true
+
 rootTokens:
   - boulderDBToken
