@@ -1,7 +1,7 @@
 query UserQuery {
   user {
     id
-    pseudo
+    nickname
     picture
   }
 }
