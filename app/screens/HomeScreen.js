@@ -136,7 +136,7 @@ export class HomeScreen extends React.Component {
                   <Thumbnail large source={{ uri: this.props.me.picture }} />
                 </Row>
                 <Row>
-                  <Text style={styles.pseudo}>{this.props.me.pseudo}</Text>
+                  <Text style={styles.pseudo}>{this.props.me.nickname}</Text>
                 </Row>
 
               </Grid>

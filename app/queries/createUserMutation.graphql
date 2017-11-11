@@ -1,7 +1,0 @@
-mutation CreateUserMutation($idToken: String!, $pseudo: String!, $picture: String) {
-  createUser(authProvider: {auth0: {idToken: $idToken}}, pseudo: $pseudo, picture: $picture) {
-    id
-    pseudo
-    picture
-  }
-}
