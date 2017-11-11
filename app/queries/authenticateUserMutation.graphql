@@ -1,0 +1,5 @@
+mutation AuthenticateUserMutation($accessToken: String!) {
+  authenticateUser(accessToken: $accessToken) {
+    token
+  }
+}

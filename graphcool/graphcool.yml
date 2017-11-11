@@ -1,0 +1,85 @@
+types: types.graphql
+
+functions:
+  updateRouteStats:
+    type: subscription
+    handler: 
+     code: 
+      src: ./src/updateRouteStats/updateRouteStats.ts
+    query: ./src/updateRouteStats/updateRouteStats.graphql
+  auth0Authentication:
+    handler:
+      code:
+        src: ./src/auth0/auth0Authentication.ts
+        environment:
+          AUTH0_DOMAIN: climbstat.eu.auth0.com
+          AUTH0_AUDIENCE: https://climbstat.eu.auth0.com/api/v2/
+    type: resolver
+    schema: ./src/auth0/auth0Authentication.graphql
+
+# Permissions rules
+permissions:
+  # File
+- operation: File.read
+- operation: File.create
+  authenticated: true
+
+  # User
+- operation: User.create
+- operation: User.read
+  authenticated: true
+- operation: User.update
+  authenticated: true
+- operation: User.delete
+  authenticated: true
+
+  # Gym
+- operation: Gym.create
+- operation: Gym.read
+- operation: Gym.update
+- operation: Gym.delete
+
+  # Wall
+- operation: Wall.create
+- operation: Wall.read
+- operation: Wall.update
+- operation: Wall.delete
+
+  # Route
+- operation: Route.create
+- operation: Route.read
+- operation: Route.update
+- operation: Route.delete
+
+  # Try
+- operation: Try.create
+  authenticated: true
+  query: ./src/permissions/permitCreateTry.graphql
+- operation: Try.read
+  authenticated: true
+  query: ./src/permissions/permitReadTry.graphql
+- operation: Try.update
+  authenticated: true
+  query: ./src/permissions/permitUpdateTry.graphql
+- operation: Try.delete
+  authenticated: true
+  query: ./src/permissions/permitDeleteTry.graphql
+
+  # TryOnRoute
+- operation: TryOnRoute.*
+  authenticated: true
+
+  # TryOnUser
+- operation: TryOnUser.*
+  authenticated: true
+
+  # WallOnGym
+- operation: WallOnGym.connect
+  authenticated: true
+
+  # RouteOnWall
+- operation: RouteOnWall.connect
+  authenticated: true
+
+rootTokens:
+  - boulderDBToken

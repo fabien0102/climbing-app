@@ -1,7 +1,4 @@
-# project: cj7bvwftj21oz0103sv2hrsmg
-# version: 51
-
-type File implements Node {
+type File @model {
   contentType: String!
   createdAt: DateTime!
   gym: Gym @relation(name: "GymLogo")
@@ -13,18 +10,19 @@ type File implements Node {
   url: String! @isUnique
 }
 
-type User implements Node {
+type User @model {
   createdAt: DateTime!
   id: ID! @isUnique
   pseudo: String @isUnique
   updatedAt: DateTime!
-  email: String @isUnique
-  password: String
   tries: [Try!]! @relation(name: "TryOnUser")
   auth0UserId: String @isUnique
+  email: String
+  nickname: String
+  picture: String
 }
 
-type Gym implements Node {
+type Gym @model {
   city: String!
   country: String!
   createdAt: DateTime!
@@ -35,7 +33,7 @@ type Gym implements Node {
   walls: [Wall!]! @relation(name: "WallOnGym")
 }
 
-type Wall implements Node {
+type Wall @model {
   createdAt: DateTime!
   gym: Gym @relation(name: "WallOnGym")
   id: ID! @isUnique
@@ -44,21 +42,22 @@ type Wall implements Node {
   routes: [Route!]! @relation(name: "RouteOnWall")
 }
 
-type Route implements Node {
+type Route @model {
   averageTries: Float! @defaultValue(value: 0.0)
   climbingStyle: String
   color: String!
   createdAt: DateTime!
+  openedAt: DateTime!
+  removedAt: DateTime
   grade: String!
   id: ID! @isUnique
-  removedAt: DateTime
   successRate: Float! @defaultValue(value: 0.0)
   tries: [Try!]! @relation(name: "TryOnRoute")
   updatedAt: DateTime!
   wall: Wall @relation(name: "RouteOnWall")
 }
 
-type Try implements Node {
+type Try @model {
   createdAt: DateTime!
   id: ID! @isUnique
   route: Route @relation(name: "TryOnRoute")

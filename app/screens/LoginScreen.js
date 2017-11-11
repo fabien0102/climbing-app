@@ -9,7 +9,7 @@ import Servers from "../constants/Servers";
 import Logo from "../components/AnimatedLogo";
 import styles from "./LoginScreen.style";
 import { has } from "lodash";
-import withCreateUser from "../queries/withCreateUser";
+import withAuthenticateUser from "../queries/withAuthenticateUser";
 import withMe from "../queries/withMe";
 
 /**
@@ -58,7 +58,7 @@ export class LoginScreen extends React.Component {
   }
 
   handleParams = async res => {
-    if (res.error || !res.id_token) {
+    if (res.error || !res.access_token) {
       Alert.alert(
         "Error",
         res.error_description || "something went wrong while logging in"
@@ -67,19 +67,11 @@ export class LoginScreen extends React.Component {
     }
 
     try {
-      const { nickname, picture, user_id } = jwtDecode(res.id_token);
-
-      // avoid pseudo collision (discord pattern like)
-      const pseudo = `${nickname}#${user_id.split("|")[1].slice(0, 4)}`
-
-      await AsyncStorage.setItem("token", res.id_token);
-      const user = await this.props.me.refetch();
-
-      // user already exists
-      if (user.data.user) return;
-
-      // else -> createUsers
-      const newUser = await this.props.createUser(res.id_token, pseudo, picture);
+      const {
+        data: { authenticateUser: { token } }
+      } = await this.props.authenticateUser(res.access_token);
+      await AsyncStorage.setItem("token", token);
+      await this.props.me.refetch();
     } catch (err) {
       Alert.alert("Error", err.message);
     }
@@ -90,8 +82,9 @@ export class LoginScreen extends React.Component {
     const result = await AuthSession.startAsync({
       authUrl: `${Servers.auth0.domain}/authorize?${qs.stringify({
         client_id: Servers.auth0.clientId,
-        response_type: "id_token",
-        scope: "openid profile",
+        audience: Servers.auth0.audience,
+        response_type: "token",
+        scope: "openid email profile",
         nonce: await this.getNonce(),
         redirect_uri: redirectUrl
       })}`
@@ -136,4 +129,4 @@ export class LoginScreen extends React.Component {
   };
 }
 
-export default withApollo(compose(withCreateUser, withMe)(LoginScreen));
+export default withApollo(compose(withAuthenticateUser, withMe)(LoginScreen));

@@ -1,0 +1,10 @@
+query PermitCreateTry ($user_id: ID!, $input_userId: ID!) {
+  SomeUserExists (
+    filter: {
+      AND: [
+        { id: $user_id },
+        { id: $input_userId }
+      ]
+    }
+  )
+}
