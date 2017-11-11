@@ -1,4 +1,4 @@
-import { getStats } from "../update-route-stats";
+import { getStats } from "../updateRouteStats";
 import "jest";
 import data from "./data";
 

@@ -1,0 +1,10 @@
+query PermitDeleteTry ($node_id: ID!, $user_id: ID!) {
+  SomeTryExists(
+    filter: {
+      id: $node_id
+      user: {
+        id: $user_id
+      }
+    }
+  )
+}

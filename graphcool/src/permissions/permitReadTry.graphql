@@ -1,4 +1,4 @@
-query UpdateTryQuery ($node_id: ID!, $user_id: ID!) {
+query PermitReadTry ($node_id: ID!, $user_id: ID!) {
   SomeTryExists(
     filter: {
       id: $node_id

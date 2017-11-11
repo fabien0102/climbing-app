@@ -1,12 +1,12 @@
-types: ./types.graphql
+types: types.graphql
 
 functions:
   updateRouteStats:
     type: subscription
     handler: 
      code: 
-      src: src/update-route-stats/update-route-stats.ts
-    query: src/update-route-stats/update-route-stats.graphql
+      src: ./src/updateRouteStats/updateRouteStats.ts
+    query: ./src/updateRouteStats/updateRouteStats.graphql
   auth0Authentication:
     handler:
       code:
@@ -16,13 +16,6 @@ functions:
           AUTH0_AUDIENCE: https://climbstat.eu.auth0.com/api/v2/
     type: resolver
     schema: ./src/auth0/auth0Authentication.graphql
-  loggedInUser:
-    handler:
-      code:
-        src: ./src/auth0/loggedInUser.ts
-    type: resolver
-    schema: ./src/auth0/loggedInUser.graphql
-
 
 # Permissions rules
 permissions:
@@ -61,16 +54,16 @@ permissions:
   # Try
 - operation: Try.create
   authenticated: true
-  query: src/update-try.graphql
+  query: ./src/permissions/permitCreateTry.graphql
 - operation: Try.read
   authenticated: true
-  query: src/update-try.graphql
+  query: ./src/permissions/permitReadTry.graphql
 - operation: Try.update
   authenticated: true
-  query: src/update-try.graphql
+  query: ./src/permissions/permitUpdateTry.graphql
 - operation: Try.delete
   authenticated: true
-  query: src/update-try.graphql
+  query: ./src/permissions/permitDeleteTry.graphql
 
 rootTokens:
   - boulderDBToken

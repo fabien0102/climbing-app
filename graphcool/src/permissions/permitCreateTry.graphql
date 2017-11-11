@@ -1,0 +1,7 @@
+query PermitCreateTry ($user_id: ID!) {
+  SomeUserExists(
+    filter: {
+      id: $user_id
+    }
+  )
+}
