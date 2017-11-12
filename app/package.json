@@ -16,17 +16,19 @@
     ]
   },
   "dependencies": {
-    "apollo-client": "^1.9.3",
+    "apollo-client-preset": "^1.0.2",
+    "apollo-link-context": "^1.0.0",
     "babel-plugin-inline-import-graphql-ast": "^2.0.1",
     "date-fns": "^1.29.0",
     "expo": "^22.0.0",
-    "graphql-tag": "^2.4.2",
+    "graphql": "^0.11.7",
+    "graphql-tag": "^2.5.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "native-base": "^2.3.2",
     "qs": "^6.5.1",
     "react": "16.0.0-beta.5",
-    "react-apollo": "^1.4.16",
+    "react-apollo": "^2.0.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-22.0.1.tar.gz",
     "react-navigation": "^1.0.0-beta.12"
   },

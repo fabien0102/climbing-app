@@ -70,7 +70,7 @@ export class LoginScreen extends React.Component {
       const {
         data: { authenticateUser: { token } }
       } = await this.props.authenticateUser(res.access_token);
-      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("token", `Bearer ${token}`);
       await this.props.me.refetch();
     } catch (err) {
       Alert.alert("Error", err.message);
