@@ -11,34 +11,22 @@ import { AppLoading, Asset, Font } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 import { set } from "lodash";
 import Servers from "./constants/Servers";
-import ApolloClient, { createNetworkInterface } from "apollo-client";
+import { ApolloClient, HttpLink, InMemoryCache } from "apollo-client-preset";
+import { setContext } from "apollo-link-context";
 import { ApolloProvider } from "react-apollo";
 
 import RootNavigation from "./navigation/RootNavigation";
 
-const networkInterface = createNetworkInterface({
-  uri: Servers.graphql.uri
-});
-
-networkInterface.use([
-  {
-    applyMiddleware(req, next) {
-      AsyncStorage.getItem("token").then(
-        encodedToken => {
-          set(req.options, "headers.authorization", `Bearer ${encodedToken}`);
-          next();
-        },
-        failure => {
-          console.error("ERROR: no token", failure);
-          next();
-        }
-      );
-    }
+const httpLink = new HttpLink({ uri: Servers.graphql.uri });
+const authLink = setContext(async () => ({
+  headers: {
+    authorization: (await AsyncStorage.getItem("token")) || null
   }
-]);
+}));
 
 const client = new ApolloClient({
-  networkInterface
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
 });
 
 export default class App extends React.Component {
