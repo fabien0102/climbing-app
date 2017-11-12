@@ -1,11 +1,11 @@
 query AllRoutesQuery($wallId: ID!, $userId: ID!) {
-  allRoutes(orderBy: grade_ASC, filter: {wall: {id: $wallId}}) {
+  allRoutes(orderBy: grade_ASC, filter: {wall: {id: $wallId}, removedAt: null}) {
     id
     color
     grade
     successRate
     averageTries
-    tries (filter: {user: {id: $userId}}) {
+    tries(filter: {user: {id: $userId}}) {
       successLevel
     }
   }
